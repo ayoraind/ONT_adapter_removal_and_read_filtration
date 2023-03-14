@@ -1,7 +1,7 @@
 process PORECHOP {
     tag "Porechop on $sample_id"
 
-    conda "../porechop_filtlong_env.yml"
+    conda "/MIGE/01_DATA/07_TOOLS_AND_SOFTWARE/nextflow_pipelines/hDNA_removal_and_map_stats/porechop_filtlong_env.yml"
 
     input:
     tuple val(sample_id), path(reads)
@@ -42,7 +42,7 @@ process FILTLONG {
     publishDir "${params.output_dir}", mode:'copy'
     tag "Filtlong on $sample_id"
 
-    conda "../porechop_filtlong_env.yml"
+    conda "/MIGE/01_DATA/07_TOOLS_AND_SOFTWARE/nextflow_pipelines/hDNA_removal_and_map_stats/porechop_filtlong_env.yml"
 
 
     input:
@@ -60,6 +60,7 @@ process FILTLONG {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${sample_id}"
     if ("$reads" == "${prefix}.fastq.gz") error "Read FASTQ input and output names are the same, set prefix in module configuration to disambiguate!"
+    
     """
     filtlong \\
         $args \\
@@ -69,6 +70,7 @@ process FILTLONG {
         $reads \\
         2> ${prefix}.log \\
         | gzip -n > ${prefix}.FILTLONG.fastq.gz
+	
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         filtlong: \$( filtlong --version | sed -e "s/Filtlong v//g" )
