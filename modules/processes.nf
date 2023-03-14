@@ -68,7 +68,7 @@ process FILTLONG {
         --target_bases 1000000000 \\
         $reads \\
         2> ${prefix}.log \\
-        | gzip -n > ${prefix}.fastq.gz
+        | gzip -n > ${prefix}.FILTLONG.fastq.gz
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         filtlong: \$( filtlong --version | sed -e "s/Filtlong v//g" )
