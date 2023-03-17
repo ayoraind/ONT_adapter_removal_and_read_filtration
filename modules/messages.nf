@@ -6,7 +6,7 @@ def help_message() {
 
         Mandatory arguments:
          --reads                        Query fastqz file of sequences you wish to supply as input (e.g., "/MIGE/01_DATA/01_FASTQ/T055-8-*.fastq.gz")
-         --output_dir                   Output directory to place final combined kraken output (e.g., "/MIGE/01_DATA/03_ASSEMBLY")
+         --output_dir                   Output directory to place output reads (e.g., "/MIGE/01_DATA/01_FASTQ")
          
         Optional arguments:
          --help                         This usage statement.
