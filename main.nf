@@ -2,32 +2,47 @@
 
 nextflow.enable.dsl=2
 
-// include definitions
-include  { helpMessage; Version } from './modules/messages.nf'
+// include non-process modules
+include { help_message; version_message; complete_message; error_message; pipeline_start_message } from './modules/messages.nf'
+include { default_params; check_params } from './modules/params_parser.nf'
+include { help_or_version } from './modules/params_utilities.nf'
+
+version = '1.0dev'
+
+// setup default params
+default_params = default_params()
+
+// merge defaults with user params
+merged_params = default_params + params
+
+// help and version messages
+help_or_version(merged_params, version)
+
+final_params = check_params(merged_params)
+
+// starting pipeline
+pipeline_start_message(version, final_params)
+
 
 // include processes
-include { PORECHOP; FILTLONG } from './modules/processes.nf'
-
-
-log.info """\
-    ONT PREPROCESSING  - TAPIR   P I P E L I N E
-    ============================================
-    output_dir       : ${params.output_dir}
-    """
-    .stripIndent()
-
-/*
- * define the `index` process that creates a binary index
- * given the transcriptome file
- */
+include { PORECHOP; FILTLONG } from './modules/processes.nf' addParams(final_params)
 
 
 workflow {
          reads_ch = channel
-                          .fromPath( params.reads, checkIfExists: true )
+                          .fromPath( final_params.reads )
                           .map { file -> tuple(file.simpleName, file) }
+			  .ifEmpty { error "Cannot find any reads matching: ${final_params.reads}" }
 
     PORECHOP(reads_ch)
     FILTLONG(PORECHOP.out.fastqs_ch)
 
+}
+
+workflow.onComplete {
+    complete_message(final_params, workflow, version)
+}
+
+workflow.onError {
+    error_message(workflow)
 }
