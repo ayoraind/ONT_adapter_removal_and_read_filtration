@@ -1,8 +1,6 @@
 process PORECHOP {
     tag "Porechop on $sample_id"
 
-    conda "/MIGE/01_DATA/07_TOOLS_AND_SOFTWARE/nextflow_pipelines/hDNA_removal_and_map_stats/porechop_filtlong_env.yml"
-
     input:
     tuple val(sample_id), path(reads)
 
@@ -41,9 +39,6 @@ process PORECHOP {
 process FILTLONG {
     publishDir "${params.output_dir}", mode:'copy'
     tag "Filtlong on $sample_id"
-
-    conda "/MIGE/01_DATA/07_TOOLS_AND_SOFTWARE/nextflow_pipelines/hDNA_removal_and_map_stats/porechop_filtlong_env.yml"
-
 
     input:
     tuple val(sample_id), path(reads)
