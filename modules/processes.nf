@@ -1,6 +1,11 @@
 process PORECHOP {
     tag "Porechop on $sample_id"
-
+    
+    memory { 4.GB * task.attempt }
+    
+    errorStrategy { task.attempt <= 5 ? "retry" : "finish" }
+    maxRetries 5
+    
     input:
     tuple val(sample_id), path(reads)
 
@@ -39,7 +44,12 @@ process PORECHOP {
 process FILTLONG {
     publishDir "${params.output_dir}", mode:'copy'
     tag "Filtlong on $sample_id"
-
+    
+    memory { 4.GB * task.attempt }
+    
+    errorStrategy { task.attempt <= 5 ? "retry" : "finish" }
+    maxRetries 5
+    
     input:
     tuple val(sample_id), path(reads)
 
