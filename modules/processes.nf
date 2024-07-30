@@ -3,7 +3,7 @@ process PORECHOP {
     
     memory { 4.GB * task.attempt }
     
-    errorStrategy { task.attempt <= 5 ? "retry" : "finish" }
+    errorStrategy { task.attempt <= 5 ? "retry" : "ignore" }
     maxRetries 5
     
     input:
@@ -47,7 +47,7 @@ process FILTLONG {
     
     memory { 4.GB * task.attempt }
     
-    errorStrategy { task.attempt <= 5 ? "retry" : "finish" }
+    errorStrategy { task.attempt <= 5 ? "retry" : "ignore" }
     maxRetries 5
     
     input:
